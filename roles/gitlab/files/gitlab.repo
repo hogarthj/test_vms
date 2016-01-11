@@ -1,0 +1,5 @@
+[gitlab]
+name=Gitlab CE
+baseurl=https://packages.gitlab.com/gitlab/gitlab-ce/el/$releasever/$basearch
+gpgcheck=0
+

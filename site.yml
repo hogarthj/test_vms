@@ -1,2 +1,26 @@
 ---
+- hosts: all
+  roles:
+    - common
+
+- hosts: gitlab
+  roles:
+    - gitlab
+
+- hosts: ipa
+  roles:
+    - ipaserver
+
+- hosts: postgres
+  roles:
+    - postgresql
+
+- hosts: pgpool
+  roles:
+    - pgpool
+
+# - hosts: all:!ipa
+#   remote_user: root
+#   roles:
+#       - ipaclient
 ...

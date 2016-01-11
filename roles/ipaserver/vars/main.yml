@@ -1,0 +1,6 @@
+---
+ipa_realm: AMEX.EE
+ipa_domain: amex.ee
+ipa_password: P455w0rd
+ipa_dns_forwarder: 192.168.124.1
+...

@@ -1,0 +1,8 @@
+standby_mode = 'on'
+{% for pg_host in groups['postgres'] %}
+{% if hostvars[pg_host]['pg_status'] is defined %}
+{% if hostvars[pg_host]['pg_status'] == "primary" %}
+primary_conninfo = 'host={{ hostvars[pg_host]['ansible_default_ipv4']['address'] }}'
+{% endif %}
+{% endif %}
+{% endfor %}

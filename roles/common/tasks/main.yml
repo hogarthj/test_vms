@@ -1,2 +1,14 @@
 ---
+- name: Install ssh key
+  authorized_key:
+      user: root
+      key: "{{ lookup('file', '~/.ssh/id_rsa.pub')  }}"
+  tags:
+    - sshkeys
+- name: Install selinux python bindings
+  yum: name=libselinux-python state=present
+- name: Set selinux to pemissive
+  selinux: policy=targeted state=permissive
+- name: Disable firewall
+  service: name=firewalld enabled=false state=stopped
 ...

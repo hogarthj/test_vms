@@ -1,0 +1,47 @@
+---
+- name: Add postgresql repo
+  shell:  /usr/bin/rpm -ivh http://yum.postgresql.org/9.5/redhat/rhel-{{ ansible_distribution_major_version }}-{{ ansible_architecture }}/pgdg-redhat95-9.5-2.noarch.rpm
+  args:
+    creates: /etc/yum.repos.d/pgdg-95-redhat.repo
+- name: Install postgresql
+  yum:
+    name: postgresql95-server
+- name: Initialise primary DB
+  shell: /usr/pgsql-9.5/bin/postgresql95-setup initdb
+  args:
+    creates: /var/lib/pgsql/9.5/data/PG_VERSION
+  when: pg_status == "primary"
+- name: Configure primary postgresql.conf
+  template: src=postgresql.conf.j2 dest=/var/lib/pgsql/9.5/data/postgresql.conf
+  notify: reload postgresql
+  when: pg_status == "primary"
+- name: Configure primary pg_hba.conf
+  template: src=pg_hba.conf.j2 dest=/var/lib/pgsql/9.5/data/pg_hba.conf
+  notify: reload postgresql
+  when: pg_status == "primary"
+- name: start primary database
+  service: name=postgresql-9.5 state=started enabled=yes
+  when: pg_status == "primary"
+- name: Create basebackup script
+  template: src=basebackup.sh.j2 dest=/usr/local/bin/basebackup.sh mode=0755
+  when: pg_status == "backup"
+- name: Configure backup replication to primary
+  template: src=recovery.conf.j2 dest=/var/lib/pgsql/9.5/data/recovery.conf
+  when: pg_status == "backup"
+- meta: flush_handlers
+- name: Take initial basebackup from the primary
+  shell: /usr/local/bin/basebackup.sh
+  args:
+    creates: /var/lib/pgsql/9.5/data/PG_VERSION
+- name: Configure backup postgresql.conf
+  template: src=postgresql.conf.j2 dest=/var/lib/pgsql/9.5/data/postgresql.conf
+  notify: reload postgresql
+  when: pg_status == "backup"
+- name: Configure backup pg_hba.conf
+  template: src=pg_hba.conf.j2 dest=/var/lib/pgsql/9.5/data/pg_hba.conf
+  notify: reload postgresql
+  when: pg_status == "backup"
+- name: Start backup system
+  service: name=postgresql-9.5 state=started enabled=yes
+  when: pg_status == "backup"
+...
