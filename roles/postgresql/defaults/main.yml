@@ -1,3 +1,4 @@
 ---
 pg_status: backup
+pg_primary: ""
 ...

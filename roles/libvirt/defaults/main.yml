@@ -1,2 +1,6 @@
 ---
+test_vms: 
+    - c7-postgres01
+    - c7-postgres02
+    - c7-postgres03
 ...

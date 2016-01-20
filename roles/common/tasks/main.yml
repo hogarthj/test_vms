@@ -11,4 +11,6 @@
   selinux: policy=targeted state=permissive
 - name: Disable firewall
   service: name=firewalld enabled=false state=stopped
+- name: Set hostname to vmname
+  hostname: name={{ inventory_hostname }}.local.test
 ...

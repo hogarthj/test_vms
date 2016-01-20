@@ -18,11 +18,9 @@ lc_numeric = 'en_GB.UTF-8'          # locale for number formatting
 lc_time = 'en_GB.UTF-8'             # locale for time formatting
 default_text_search_config = 'pg_catalog.english'
 
-{% if pg_status == "primary" %}
 listen_addresses = '*'
 wal_level = hot_standby
-max_wal_senders = 10
-{% endif %}
+max_wal_senders = {{ (groups['postgres']|length)*2 }}
 
 {% if pg_status == "backup" %}
 hot_standby = on

@@ -1,18 +1,15 @@
 #!/bin/bash -e
 
-tmpconf="$(mktemp -d)"
 
-mv /var/lib/pgsql/9.5/data/* ${tmpconf}/
+rm -rf /var/lib/pgsql/9.5/data/* 
 
 {% for pg_host in groups['postgres'] %}
 {% if hostvars[pg_host]['pg_status'] is defined %}
 {% if hostvars[pg_host]['pg_status'] == "primary" %}
-/usr/pgsql-9.5/bin/pg_basebackup -h {{ hostvars[pg_host]['ansible_default_ipv4']['address'] }} -D /var/lib/pgsql/9.5/data/ -U postgres
+/usr/pgsql-9.5/bin/pg_basebackup -X stream -h {{ hostvars[pg_host]['ansible_default_ipv4']['address'] }} -D /var/lib/pgsql/9.5/data/ -U postgres
 chown -R postgres:postgres /var/lib/pgsql/9.5/data
 {% endif %}
 {% endif %}
 {% endfor %}
 
-mv ${tmpconf}/*.conf /var/lib/pgsql/9.5/data/
-rm -rf ${tmpconf}
 

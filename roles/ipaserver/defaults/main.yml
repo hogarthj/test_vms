@@ -1,2 +1,6 @@
 ---
+ipa_realm: LOCAL.TEST
+ipa_domain: local.test
+ipa_password: P455w0rd
+ipa_dns_forwarder: 192.168.124.1
 ...

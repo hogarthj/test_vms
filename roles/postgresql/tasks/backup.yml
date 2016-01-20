@@ -1,0 +1,20 @@
+---
+- name: Create basebackup script
+  template: src=basebackup.sh.j2 dest=/usr/local/bin/basebackup.sh mode=0755
+- meta: flush_handlers
+- name: Take initial basebackup from the primary
+  shell: /usr/local/bin/basebackup.sh
+  args:
+    creates: /var/lib/pgsql/9.5/data/PG_VERSION
+- name: Configure backup replication to primary
+  template: src=recovery.conf.j2 dest=/var/lib/pgsql/9.5/data/recovery.conf
+  notify: restart postgresql
+- name: Configure backup postgresql.conf
+  template: src=postgresql.conf.j2 dest=/var/lib/pgsql/9.5/data/postgresql.conf
+  notify: restart postgresql
+- name: Configure backup pg_hba.conf
+  template: src=pg_hba.conf.j2 dest=/var/lib/pgsql/9.5/data/pg_hba.conf
+  notify: restart postgresql
+- name: Start backup system
+  service: name=postgresql-9.5 state=started enabled=yes
+...
