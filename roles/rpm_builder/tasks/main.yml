@@ -1,0 +1,9 @@
+---
+- name: Install the rpm builder packages
+  yum: name={{item}} state=present
+  with_items:
+    - rpmdevtools
+    - rpm-build
+    - mock
+    - rpmlint
+...

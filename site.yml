@@ -2,6 +2,7 @@
 - hosts: local
   roles:
     - libvirt
+
 - hosts: all:!local
   roles:
     - common
@@ -21,6 +22,15 @@
 - hosts: pgpool
   roles:
     - pgpool
+
+- hosts: jenkins
+  roles:
+    - jenkins
+
+- hosts: jenkins_slave
+  roles:
+    - jenkins_slave
+    - rpm_builder
 
 # - hosts: all:!ipa
 #   remote_user: root

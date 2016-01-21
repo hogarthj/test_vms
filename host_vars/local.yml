@@ -1,0 +1,24 @@
+test_vms:
+ - c7-postgres01
+ - c7-postgres02
+ - c7-postgres03
+ - c7-pgpool01
+ - c7-pgpool02
+ - c7-jenkins01
+ - c7-jenkins-slave01
+
+host_groups:
+    c7-postgres01:
+        - postgres
+    c7-postgres02:
+        - postgres
+    c7-postgres03:
+        - postgres
+    c7-pgpool01:
+        - pgpool
+    c7-pgpool02:
+        - pgpool
+    c7-jenkins01:
+        - jenkins
+    c7-jenkins-slave01:
+        - jenkins_slave

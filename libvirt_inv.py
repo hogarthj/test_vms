@@ -57,7 +57,7 @@ class LibvirtInventory(object):
                             continue
                         for addr in dom_ifaces[iface]['addrs']:
                             if addr['type'] == 0:
-                                dom_host_vars['ansible_ssh_host'] =  addr['addr']
+                                dom_host_vars['ansible_host'] =  addr['addr']
                 if 'ansible_ssh_host' not in dom_host_vars:
                     return
                 if 'groups' in dom_inv:
@@ -66,7 +66,7 @@ class LibvirtInventory(object):
                             self.inventory[group]['hosts'].append(domain.name())
                         else:
                             self.inventory.update({group: {'hosts': [domain.name()]}})
-                dom_host_vars['ansible_ssh_user'] = 'root'
+                dom_host_vars['ansible_user'] = 'root'
                 if 'hostvars' in dom_inv:
                     dom_host_vars.update(dom_inv['hostvars'])
                 self.inventory['_meta']['hostvars'].update({domain.name(): dom_host_vars })

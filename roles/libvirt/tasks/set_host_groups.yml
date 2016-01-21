@@ -1,0 +1,13 @@
+---
+- name: Get defined groups into correct form
+  set_fact:
+    group_desc: 
+        groups: "{{host_groups[item]}}" 
+  when: host_groups != []
+- name: Get current groups
+  command: virsh desc {{item}}
+  register: host_desc
+- name: Set the groups of the vm
+  command: virsh desc {{item}} '{{group_desc|to_json}}'
+  when: host_desc.stdout.find(group_desc|to_json) == -1
+...

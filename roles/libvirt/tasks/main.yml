@@ -10,4 +10,7 @@
   when: item|failed
   with_items: "{{ vmstatus.results }}"
   no_log: true
+- name: Set host groups
+  include: set_host_groups.yml
+  with_items: "{{ host_groups }}"
 ...
