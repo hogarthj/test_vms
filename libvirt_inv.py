@@ -58,7 +58,7 @@ class LibvirtInventory(object):
                         for addr in dom_ifaces[iface]['addrs']:
                             if addr['type'] == 0:
                                 dom_host_vars['ansible_host'] =  addr['addr']
-                if 'ansible_ssh_host' not in dom_host_vars:
+                if 'ansible_host' not in dom_host_vars:
                     return
                 if 'groups' in dom_inv:
                     for group in dom_inv['groups']:
