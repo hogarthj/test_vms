@@ -1,0 +1,14 @@
+---
+- name: Install the python mysql bindings
+  package:
+    name: python2-mysql
+    state: latest
+- name: Create mysql database
+  mysql_db:
+    name: "{{ oc_dbname }}"
+- name: Create mysql user for owncloud
+  mysql_user:
+    name: "{{ oc_dbuser }}"
+    password: "{{ oc_dbpass }}"
+    priv: "{{ oc_dbname }}.*:ALL"
+...

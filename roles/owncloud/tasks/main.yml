@@ -1,0 +1,78 @@
+---
+- name: Set the webserver to httpd
+  set_fact: oc_web=httpd
+  when: inventory_hostname in groups.httpd
+- name: Set the webserver to nginx
+  set_fact: oc_web=nginx
+  when: inventory_hostname in groups.nginx
+- name: Set the DB to mysql
+  set_fact: oc_db=mysql
+  when: inventory_hostname in groups.mysql
+- name: Set the DB to postgresql
+  set_fact: oc_db=postgresql
+  when: inventory_hostname in groups.postgres
+- name: Install owncloud packages
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - owncloud
+    - owncloud-{{ oc_web }}
+    - owncloud-{{ oc_db }}
+- name: Permit http access through the firewall
+  firewalld:
+    immediate: yes
+    permanent: yes
+    service: http
+    state: enabled
+- name: Set selinux booleans for network access and document conversions
+  seboolean:
+    name: "{{ item }}"
+    persistent: yes
+    state: yes
+  with_items:
+    - httpd_execmem
+    - httpd_can_network_connect
+- name: Create the mysql database
+  include: mysql.yml
+  when: oc_db == "mysql"
+- name: Create the postgres database
+  include: postgres.yml
+  when: oc_db == "postgresql"
+- name: The httpd server needs access enabled
+  file:
+    state: link
+    path: /etc/httpd/conf.d/z-owncloud-access.conf
+    src: /etc/httpd/conf.d/owncloud-access.conf.avail
+  notify: Reload httpd
+  when: oc_web == "httpd"
+- name: Get owncloud status
+  become: yes
+  become_user: apache
+  command:  /usr/bin/php /usr/share/owncloud/occ status
+  register: occ_status
+  failed_when: "occ_status.stdout.find(' is not installed') == -1 and occ_status.stdout.find('installed: true') == -1"
+  changed_when: "occ_status.stdout.find(' is not installed') != -1"
+  notify: Reload {{ oc_web }}
+- meta: flush_handlers
+- name: Carry out initial install of owncloud
+  become: yes
+  become_user: apache
+  command: /usr/bin/php /usr/share/owncloud/occ maintenance:install \ 
+           --no-interaction \
+           --data-dir=/var/lib/owncloud/data \
+           --database="{{ (oc_db == "postgresql") | ternary('pgsql', oc_db) }}" \ 
+           --database-name="{{ oc_dbname }}" \
+           --database-user="{{ oc_dbuser }}" \
+           --database-pass="{{ oc_dbpass }}" \
+           --admin-pass="{{ oc_adminpass }}"
+  when: "occ_status.stdout.find(' is not installed') != -1"
+- name: Set IP as trusted domain
+  lineinfile:
+    dest: /etc/owncloud/config.php
+    state: present
+    insertafter: '^\s+0\s+=>.*localhost.*$'
+    line: 1 => "{{ ansible_default_ipv4.address}}",
+
+
+...      

@@ -1,0 +1,36 @@
+---
+- name: Install python postgres bindings
+  package:
+    name: python-psycopg2
+    state: latest
+- name: Create user to access database
+  become: yes
+  become_user: postgres
+  postgresql_user:
+    name: "{{ oc_dbuser }}"
+    password: "{{ oc_dbpass }}"
+- name: Create database for owncloud
+  become: yes
+  become_user: postgres
+  postgresql_db:
+    name: "{{ oc_dbname }}"
+    owner: "{{ oc_dbuser }}"
+- name: Set priviledges for user on db
+  become: yes
+  become_user: postgres
+  postgresql_privs:
+    database: "{{ oc_dbname }}"
+    type: database
+    privs: ALL
+    role: "{{ oc_dbuser }}"
+- name: Allow password auth for owncloud user
+  lineinfile: 
+    dest: /var/lib/pgsql/data/pg_hba.conf
+    state: present
+    insertafter: '^#\s+TYPE\s+DATABASE\s+USER\s+ADDRESS\s+METHOD\s*$'
+    line: "{{ item }}" 
+  with_items:
+    - "host {{ oc_dbname }} {{ oc_dbuser }} 127.0.0.1/32 password"
+    - "host {{ oc_dbname }} {{ oc_dbuser }} ::1/128 password"
+  notify: Reload postgresql
+...
