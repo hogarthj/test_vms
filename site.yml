@@ -1,4 +1,13 @@
 ---
+- hosts: fedora
+  gather_facts: false
+  tasks:
+    - name: install python and deps for ansible modules
+      raw: dnf install -y python2 python2-dnf libselinux-python
+    - name: Gather facts
+      setup:
+
+
 - hosts: local
   roles:
     - libvirt
@@ -15,9 +24,9 @@
   roles:
     - ipaserver
 
-- hosts: postgres
+- hosts: pg_cluster
   roles:
-    - postgresql
+    - pg_cluster
 
 - hosts: pgpool
   roles:
@@ -36,4 +45,9 @@
 #   remote_user: root
 #   roles:
 #       - ipaclient
+#
+
+- hosts: owncloud
+  roles:
+    - owncloud
 ...
