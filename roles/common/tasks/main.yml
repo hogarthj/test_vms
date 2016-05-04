@@ -1,16 +1,25 @@
 ---
 - name: Install ssh key
   authorized_key:
-      user: root
-      key: "{{ lookup('file', '~/.ssh/id_rsa.pub')  }}"
+    user: root
+    key: "{{ lookup('file', '~/.ssh/id_rsa.pub')  }}"
   tags:
     - sshkeys
 - name: Install selinux python bindings
-  yum: name=libselinux-python state=present
-- name: Set selinux to pemissive
-  selinux: policy=targeted state=permissive
-- name: Disable firewall
-  service: name=firewalld enabled=false state=stopped
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - libselinux-python 
+    - libsemanage-python 
+- name: Set selinux to enforcing
+  selinux: 
+    policy: targeted 
+    state: enforcing
+- name: Install python bindings for firewalld
+  package: 
+    name: python2-firewall
+    state: latest
 - name: Set hostname to vmname
   hostname: name={{ inventory_hostname }}.local.test
 ...
