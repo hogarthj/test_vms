@@ -46,6 +46,12 @@
     src: /etc/httpd/conf.d/owncloud-access.conf.avail
   notify: Reload httpd
   when: oc_web == "httpd"
+- name: Start php-fpm service for nginx usage
+  service:
+    name: php-fpm
+    state: running
+    enabled: yes
+  when: oc_web == "nginx"
 - name: Get owncloud status
   become: yes
   become_user: apache
