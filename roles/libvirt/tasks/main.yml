@@ -6,11 +6,14 @@
   ignore_errors: true
   no_log: true
 - name: create virtual machines
-  command: /usr/bin/virt-clone -o c7-template --auto-clone -n {{ item.item }}
+  command: /usr/bin/virt-clone -o c7-template --auto-clone --reflink -n {{ item.item }}
   when: item|failed
   with_items: "{{ vmstatus.results }}"
   no_log: true
 - name: Set host groups
   include: set_host_groups.yml
   with_items: "{{ host_groups }}"
+- name: Start VMs if stopped
+  include: start_guests.yml
+  with_items: "{{ test_vms }}"
 ...
