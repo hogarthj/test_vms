@@ -78,7 +78,5 @@
     dest: /etc/owncloud/config.php
     state: present
     insertafter: '^\s+0\s+=>.*localhost.*$'
-    line: 1 => "{{ ansible_default_ipv4.address}}",
-
-
-...      
+    line: "    1 => '{{ ansible_default_ipv4.address}}',"
+...
