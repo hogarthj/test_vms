@@ -1,0 +1,10 @@
+---
+- name: Check if running
+  shell: virsh domstate --domain {{ item }} | grep "shut off"
+  ignore_errors: true
+  no_log: true
+  register: result
+- name: Start if stopped
+  shell: virsh start {{ item }}
+  when: result|success
+...
