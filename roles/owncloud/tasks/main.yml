@@ -1,4 +1,7 @@
 ---
+- name: Add local vm test repo on test updates
+  include: test_repo.yml
+  when: "{{ localrepo | default(false) | bool }} == true"
 - name: Set the webserver to httpd
   set_fact: oc_web=httpd
   when: inventory_hostname in groups.httpd
@@ -11,6 +14,20 @@
 - name: Set the DB to postgresql
   set_fact: oc_db=postgresql
   when: inventory_hostname in groups.postgres
+- name: Enable EPEL testing repo
+  ini_file: 
+    dest: /etc/yum.repos.d/epel-testing.repo
+    section: epel-testing
+    option: enabled
+    value: 1
+  when: "ansible_distribution == 'CentOS' and {{  testingrepo | default(false) | bool }} == true"
+- name: Enable fedora testing repo
+  ini_file: 
+    dest: /etc/yum.repos.d/fedora-updates-testing.repo
+    section: updates-testing
+    option: enabled
+    value: 1
+  when: "ansible_distribution == 'Fedora' and {{  testingrepo | default(false) | bool }} == true"
 - name: Install owncloud packages
   package:
     name: "{{ item }}"

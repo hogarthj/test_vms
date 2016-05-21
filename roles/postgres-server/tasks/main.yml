@@ -4,7 +4,7 @@
     name: postgresql-server
     state: latest 
 - name: Initialize postgres database files
-  command: /usr/bin/postgresql-setup --initdb
+  command: /usr/bin/postgresql-setup initdb
   args:
     creates: /var/lib/pgsql/data/PG_VERSION
 - name: Start and enable the postgres service

@@ -1,5 +1,6 @@
 ---
 dependencies:
+    - { role: 'epel', when: ansible_distribution == "CentOS" }
     - { role: 'httpd', when: inventory_hostname in groups.httpd }
     - { role: 'nginx', when: inventory_hostname in groups.nginx }
     - { role: 'mysql-server', when: inventory_hostname in groups.mysql }

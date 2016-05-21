@@ -1,0 +1,6 @@
+---
+- name: Add laptop VM repo
+  template:
+    src: local_vm.repo.j2
+    dest: /etc/yum.repos.d/local_vm.repo
+...

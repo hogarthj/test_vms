@@ -1,3 +1,12 @@
 #!/usr/bin/env bash
 
-virsh list --all | awk '$2 ~ /f24-oc-/ {print $2}'| while read line; do vmkill $line ; done
+if [[ "$1" != "" ]]
+then
+    dist=$1
+else
+    dist="f24"
+fi
+
+vmpat="${dist}-oc-"
+
+virsh list --all | awk -v vmpat=${vmpat} '$2 ~ vmpat {print $2}'| while read line; do vmkill $line ; done

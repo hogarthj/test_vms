@@ -20,6 +20,7 @@
   package: 
     name: python2-firewall
     state: latest
+  when: ansible_distribution != "CentOS"
 - name: Set hostname to vmname
   hostname: name={{ inventory_hostname }}.local.test
 ...
