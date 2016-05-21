@@ -1,6 +1,6 @@
 ---
 - name: Set package name for mysql python for Fedora
-  set_fact: python_mysql=python2_mysql
+  set_fact: python_mysql=python2-mysql
   when: ansible_distribution == "Fedora"
 - name: Set package name for mysql python for CentOS
   set_fact: python_mysql=MySQL-python
