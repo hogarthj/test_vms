@@ -2,18 +2,6 @@
 - name: Add local vm test repo on test updates
   include: test_repo.yml
   when: "{{ localrepo | default(false) | bool }} == true"
-- name: Set the webserver to httpd
-  set_fact: oc_web=httpd
-  when: ('httpd' in groups ) and (inventory_hostname in groups.httpd)
-- name: Set the webserver to nginx
-  set_fact: oc_web=nginx
-  when: ('nginx' in groups) and (inventory_hostname in groups.nginx)
-- name: Set the DB to mysql
-  set_fact: oc_db=mysql
-  when: ('mysql' in groups) and (inventory_hostname in groups.mysql)
-- name: Set the DB to postgresql
-  set_fact: oc_db=postgresql
-  when: ('postgres' in groups) and (inventory_hostname in groups.postgres)
 - name: Enable EPEL testing repo
   ini_file: 
     dest: /etc/yum.repos.d/epel-testing.repo

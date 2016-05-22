@@ -1,8 +1,8 @@
 ---
 dependencies:
     - { role: 'epel', when: ansible_distribution == "CentOS" }
-    - { role: 'httpd', when: ('httpd' in groups) and (inventory_hostname in groups.httpd) }
-    - { role: 'nginx', when: ('nginx' in groups) and (inventory_hostname in groups.nginx) }
-    - { role: 'mysql-server', when: ('mysql' in groups) and (inventory_hostname in groups.mysql) }
-    - { role: 'postgres-server', when: ('postgres' in groups) and (inventory_hostname in groups.postgres) }
+    - { role: 'httpd', when: oc_web == "httpd" }
+    - { role: 'nginx', when: oc_web == "nginx" }
+    - { role: 'mysql-server', when: oc_db == "mysql" }
+    - { role: 'postgres-server', when: oc_db == "postgresql" }
 ...

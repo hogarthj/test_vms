@@ -3,4 +3,6 @@ oc_dbuser: "owncloud_user"
 oc_dbpass: "owncloud_pass"
 oc_dbname: "ownclouddb"
 oc_adminpass: "admin"
+oc_web: "httpd"
+oc_db: "mysql"
 ...
