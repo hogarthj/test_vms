@@ -1,0 +1,9 @@
+[localvm]
+name=localvm on laptop
+{% if ansible_distribution == "CentOS" %}
+baseurl=http://192.168.124.1/repo/el$releasever/$basearch/
+{% else %}
+baseurl=http://192.168.124.1/repo/$releasever/$basearch/
+{% endif %}
+gpgcheck=0
+

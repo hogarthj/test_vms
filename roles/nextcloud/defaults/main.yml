@@ -1,0 +1,8 @@
+---
+oc_dbuser: "nextcloud_user"
+oc_dbpass: "nextcloud_pass"
+oc_dbname: "nextclouddb"
+oc_adminpass: "admin"
+oc_web: "httpd"
+oc_db: "mysql"
+...

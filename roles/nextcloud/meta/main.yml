@@ -1,0 +1,8 @@
+---
+dependencies:
+    - { role: 'epel', when: ansible_distribution == "CentOS" }
+    - { role: 'httpd', when: oc_web == "httpd" }
+    - { role: 'nginx', when: oc_web == "nginx" }
+    - { role: 'mysql-server', when: oc_db == "mysql" }
+    - { role: 'postgres-server', when: oc_db == "postgresql" }
+...

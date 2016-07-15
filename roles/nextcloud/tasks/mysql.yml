@@ -1,0 +1,20 @@
+---
+- name: Set package name for mysql python for Fedora
+  set_fact: python_mysql=python2-mysql
+  when: ansible_distribution == "Fedora"
+- name: Set package name for mysql python for CentOS
+  set_fact: python_mysql=MySQL-python
+  when: ansible_distribution == "CentOS"
+- name: Install the python mysql bindings
+  package:
+    name: "{{ python_mysql }}"
+    state: latest
+- name: Create mysql database
+  mysql_db:
+    name: "{{ oc_dbname }}"
+- name: Create mysql user for nextcloud
+  mysql_user:
+    name: "{{ oc_dbuser }}"
+    password: "{{ oc_dbpass }}"
+    priv: "{{ oc_dbname }}.*:ALL"
+...

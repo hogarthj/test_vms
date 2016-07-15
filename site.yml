@@ -50,4 +50,8 @@
 - hosts: owncloud
   roles:
     - owncloud
+
+- hosts: nextcloud
+  roles:
+    - nextcloud
 ...

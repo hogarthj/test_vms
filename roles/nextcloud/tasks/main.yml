@@ -1,0 +1,87 @@
+---
+- name: Add local vm test repo on test updates
+  include: test_repo.yml
+  when: "{{ localrepo | default(false) | bool }} == true"
+- name: Enable EPEL testing repo
+  ini_file: 
+    dest: /etc/yum.repos.d/epel-testing.repo
+    section: epel-testing
+    option: enabled
+    value: 1
+  when: "ansible_distribution == 'CentOS' and {{  testingrepo | default(false) | bool }} == true"
+- name: Enable fedora testing repo
+  ini_file: 
+    dest: /etc/yum.repos.d/fedora-updates-testing.repo
+    section: updates-testing
+    option: enabled
+    value: 1
+  when: "ansible_distribution == 'Fedora' and {{  testingrepo | default(false) | bool }} == true"
+- name: Install nextcloud packages
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - nextcloud
+    - nextcloud-{{ oc_web }}
+    - nextcloud-{{ oc_db }}
+- name: Permit http access through the firewall
+  firewalld:
+    immediate: yes
+    permanent: yes
+    service: http
+    state: enabled
+- name: Set selinux booleans for network access and document conversions
+  seboolean:
+    name: "{{ item }}"
+    persistent: yes
+    state: yes
+  with_items:
+    - httpd_execmem
+    - httpd_can_network_connect
+- name: Create the mysql database
+  include: mysql.yml
+  when: oc_db == "mysql"
+- name: Create the postgres database
+  include: postgres.yml
+  when: oc_db == "postgresql"
+- name: The httpd server needs access enabled
+  file:
+    state: link
+    path: /etc/httpd/conf.d/z-nextcloud-access.conf
+    src: /etc/httpd/conf.d/nextcloud-access.conf.avail
+  notify: Reload httpd
+  when: oc_web == "httpd"
+- name: Start php-fpm service for nginx usage
+  service:
+    name: php-fpm
+    state: running
+    enabled: yes
+  when: oc_web == "nginx"
+- name: Get nextcloud status
+  become: yes
+  become_user: apache
+  command:  /usr/bin/php /usr/share/nextcloud/occ status
+  register: occ_status
+  failed_when: "occ_status.stdout.find(' is not installed') == -1 and occ_status.stdout.find('installed: true') == -1"
+  changed_when: "occ_status.stdout.find(' is not installed') != -1"
+  notify: Reload {{ oc_web }}
+- meta: flush_handlers
+- name: Carry out initial install of nextcloud
+  become: yes
+  become_user: apache
+  command: /usr/bin/php /usr/share/nextcloud/occ maintenance:install \ 
+           --no-interaction \
+           --data-dir=/var/lib/nextcloud/data \
+           --database="{{ (oc_db == "postgresql") | ternary('pgsql', oc_db) }}" \ 
+           --database-name="{{ oc_dbname }}" \
+           --database-user="{{ oc_dbuser }}" \
+           --database-pass="{{ oc_dbpass }}" \
+           --admin-pass="{{ oc_adminpass }}"
+  when: "occ_status.stdout.find(' is not installed') != -1"
+- name: Set IP as trusted domain
+  lineinfile:
+    dest: /etc/nextcloud/config.php
+    state: present
+    insertafter: '^\s+0\s+=>.*localhost.*$'
+    line: "    1 => '{{ ansible_default_ipv4.address}}',"
+...
