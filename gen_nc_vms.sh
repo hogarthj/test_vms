@@ -11,7 +11,7 @@ for web in httpd nginx
   do 
     for db in mysql postgres
       do 
-        if [[ ${dist} =~ f[[:digit:]] ]]
+        if [[ ${dist} =~ f[[:digit:]]|raw ]]
         then
             groups="\"fedora\", \"nextcloud\", \"${web}\", \"${db}\""
         else
