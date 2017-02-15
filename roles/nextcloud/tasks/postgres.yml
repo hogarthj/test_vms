@@ -31,6 +31,8 @@
     line: "{{ item }}" 
   with_items:
     - "host {{ oc_dbname }} {{ oc_dbuser }} 127.0.0.1/32 password"
+    - "host postgres {{ oc_dbuser }} 127.0.0.1/32 password"
     - "host {{ oc_dbname }} {{ oc_dbuser }} ::1/128 password"
+    - "host postgres {{ oc_dbuser }} ::1/128 password"
   notify: Reload postgresql
 ...
