@@ -3,6 +3,7 @@
   authorized_key:
     user: root
     key: "{{ lookup('file', '~/.ssh/id_rsa.pub')  }}"
+  ignore_errors: true
   tags:
     - sshkeys
 - name: Install selinux python bindings
