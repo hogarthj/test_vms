@@ -4,21 +4,20 @@ if [[ "$1" != "" ]]
 then
     dist=$1
 else
-    dist="f24"
+    dist="f25"
 fi
 
 for web in httpd nginx
-  do 
+  do
     for db in mysql postgres
-      do 
-          if [[ ${dist} =~ f([[:digit:]]|raw) ]] 
-        then
-            groups="\"fedora\", \"owncloud\", \"${web}\", \"${db}\""
-        else
-            groups="\"owncloud\", \"${web}\", \"${db}\""
-        fi
+      do
         vmclone ${dist}-oc-${web}-${db}
-        virsh desc ${dist}-oc-${web}-${db} "{\"groups\": [${groups}]}"
+        if [[ ${dist} =~ f([[:digit:]]|raw) ]]
+        then
+            vmrole ${dist}-nc-${web}-${db} fedora owncloud ${web} ${db}
+        else
+            vmrole ${dist}-nc-${web}-${db} owncloud ${web} ${db}
+        fi
         virsh start ${dist}-oc-${web}-${db}
     done
-done 
+done

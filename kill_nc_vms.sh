@@ -4,7 +4,7 @@ if [[ "$1" != "" ]]
 then
     dist=$1
 else
-    dist="f24"
+    dist="f25"
 fi
 
 vmpat="${dist}-nc-"
