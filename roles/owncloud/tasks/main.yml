@@ -1,21 +1,21 @@
 ---
 - name: Add local vm test repo on test updates
-  include: test_repo.yml
-  when: "{{ localrepo | default(false) | bool }} == true"
+  include_tasks: test_repo.yml
+  when: "( localrepo | default(false) | bool ) == true"
 - name: Enable EPEL testing repo
   ini_file:
     dest: /etc/yum.repos.d/epel-testing.repo
     section: epel-testing
     option: enabled
     value: 1
-  when: "ansible_distribution == 'CentOS' and {{  testingrepo | default(false) | bool }} == true"
+  when: "ansible_distribution == 'CentOS' and ( testingrepo | default(false) | bool ) == true"
 - name: Enable fedora testing repo
   ini_file:
     dest: /etc/yum.repos.d/fedora-updates-testing.repo
     section: updates-testing
     option: enabled
     value: 1
-  when: "ansible_distribution == 'Fedora' and {{  testingrepo | default(false) | bool }} == true"
+  when: "ansible_distribution == 'Fedora' and ( testingrepo | default(false) | bool ) == true"
 - name: Install owncloud packages
   package:
     name: "{{ item }}"
@@ -39,10 +39,10 @@
     - httpd_execmem
     - httpd_can_network_connect
 - name: Create the mysql database
-  include: mysql.yml
+  include_tasks: mysql.yml
   when: oc_db == "mysql"
 - name: Create the postgres database
-  include: postgres.yml
+  include_tasks: postgres.yml
   when: oc_db == "postgresql"
 - name: The httpd server needs access enabled
   file:

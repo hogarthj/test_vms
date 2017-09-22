@@ -1,6 +1,6 @@
 ---
 - name: Add local vm test repo on test updates
-  include: test_repo.yml
+  include_tasks: test_repo.yml
   when: "{{ localrepo | default(false) | bool }} == true"
 - name: Enable EPEL testing repo
   ini_file:
@@ -39,10 +39,10 @@
     - httpd_execmem
     - httpd_can_network_connect
 - name: Create the mysql database
-  include: mysql.yml
+  include_tasks: mysql.yml
   when: oc_db == "mysql"
 - name: Create the postgres database
-  include: postgres.yml
+  include_tasks: postgres.yml
   when: oc_db == "postgresql"
 - name: The httpd server needs access enabled
   file:

@@ -9,16 +9,16 @@
   set_fact: pg_primary={{ ansible_local.pg_primary.target }}
   when: ansible_local.pg_primary is defined
 - name: Determine primary DB if none set
-  include: select_primary.yml
+  include_tasks: select_primary.yml
   with_items: "{{ groups['postgres']|sort|first }}"
   when: pg_primary == ""
 - name: if on primary system set status to primary
   set_fact: pg_status="primary"
   when: pg_primary == "{{ inventory_hostname }}"
 - name: Initialise primary DB
-  include: primary.yml
+  include_tasks: primary.yml
   when: pg_status == "primary"
 - name: Build backup DBs
-  include: backup.yml
+  include_tasks: backup.yml
   when: pg_status == "backup"
 ...

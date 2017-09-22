@@ -12,9 +12,9 @@
   with_items: "{{ vmstatus.results }}"
   no_log: true
 - name: Set host groups
-  include: set_host_groups.yml
+  include_tasks: set_host_groups.yml
   with_items: "{{ host_groups }}"
 - name: Start VMs if stopped
-  include: start_guests.yml
+  include_tasks: start_guests.yml
   with_items: "{{ test_vms }}"
 ...

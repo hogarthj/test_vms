@@ -17,7 +17,7 @@
       - '--strip-components=1'
 
 - name: enable epel
-  include: enable_epel.yml
+  import_tasks: enable_epel.yml
 
 - name: copy inventory file into place
   copy:
