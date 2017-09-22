@@ -8,7 +8,7 @@
 - name: Install the python mysql bindings
   package:
     name: "{{ python_mysql }}"
-    state: latest
+    state: present
 - name: Create mysql database
   mysql_db:
     name: "{{ oc_dbname }}"

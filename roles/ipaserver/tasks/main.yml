@@ -1,8 +1,10 @@
 ---
 - name: Install IPA server
-  yum:  name=ipa-server-dns state=present
+  yum:
+    name: ipa-server-dns
+    state: present
 - name: Configure IPA server
-  shell: ipa-server-install -U --hostname={{ ansible_fqdn }} --ip-address={{ ansible_default_ipv4.address }} -r {{ ipa_realm  }} -n {{ ipa_domain }} -p {{ ipa_password }} -a {{ ipa_password }} --ssh-trust-dns --setup-dns --forwarder={{ ipa_dns_forwarder }}
+  command: ipa-server-install -U --hostname={{ ansible_fqdn }} --ip-address={{ ansible_default_ipv4.address }} -r {{ ipa_realm  }} -n {{ ipa_domain }} -p {{ ipa_password }} -a {{ ipa_password }} --ssh-trust-dns --setup-dns --forwarder={{ ipa_dns_forwarder }}
   args:
     creates: /etc/krb5.keytab
 ...

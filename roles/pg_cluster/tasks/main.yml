@@ -1,8 +1,7 @@
 ---
 - name: Add postgresql repo
-  shell:  /usr/bin/rpm -ivh http://yum.postgresql.org/9.5/redhat/rhel-{{ ansible_distribution_major_version }}-{{ ansible_architecture }}/pgdg-redhat95-9.5-2.noarch.rpm
-  args:
-    creates: /etc/yum.repos.d/pgdg-95-redhat.repo
+  yum:
+    name: http://yum.postgresql.org/9.5/redhat/rhel-{{ ansible_distribution_major_version }}-{{ ansible_architecture }}/pgdg-redhat95-9.5-2.noarch.rpm
 - name: Install postgresql
   yum:
     name: postgresql95-server

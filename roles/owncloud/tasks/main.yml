@@ -3,14 +3,14 @@
   include: test_repo.yml
   when: "{{ localrepo | default(false) | bool }} == true"
 - name: Enable EPEL testing repo
-  ini_file: 
+  ini_file:
     dest: /etc/yum.repos.d/epel-testing.repo
     section: epel-testing
     option: enabled
     value: 1
   when: "ansible_distribution == 'CentOS' and {{  testingrepo | default(false) | bool }} == true"
 - name: Enable fedora testing repo
-  ini_file: 
+  ini_file:
     dest: /etc/yum.repos.d/fedora-updates-testing.repo
     section: updates-testing
     option: enabled
@@ -69,10 +69,10 @@
 - name: Carry out initial install of owncloud
   become: yes
   become_user: apache
-  command: /usr/bin/php /usr/share/owncloud/occ maintenance:install \ 
+  command: /usr/bin/php /usr/share/owncloud/occ maintenance:install \
            --no-interaction \
            --data-dir=/var/lib/owncloud/data \
-           --database="{{ (oc_db == "postgresql") | ternary('pgsql', oc_db) }}" \ 
+           --database="{{ (oc_db == "postgresql") | ternary('pgsql', oc_db) }}" \
            --database-name="{{ oc_dbname }}" \
            --database-user="{{ oc_dbuser }}" \
            --database-pass="{{ oc_dbpass }}" \

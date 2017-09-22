@@ -9,18 +9,18 @@
 - name: Install selinux python bindings
   package:
     name: "{{ item }}"
-    state: latest
+    state: present
   with_items:
-    - libselinux-python 
-    - libsemanage-python 
+    - libselinux-python
+    - libsemanage-python
 - name: Set selinux to enforcing
-  selinux: 
-    policy: targeted 
-    state: enforcing
+  selinux:
+    policy: targeted
+    state: permissive
 - name: Install python bindings for firewalld
-  package: 
+  package:
     name: python2-firewall
-    state: latest
+    state: present
   when: ansible_distribution != "CentOS"
 - name: Set hostname to vmname
   hostname: name={{ inventory_hostname }}.local.test

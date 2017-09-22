@@ -1,13 +1,17 @@
 ---
 - name: Initialise primary DB
-  shell: /usr/pgsql-9.5/bin/postgresql95-setup initdb
+  command: /usr/pgsql-9.5/bin/postgresql95-setup initdb
   args:
     creates: /var/lib/pgsql/9.5/data/PG_VERSION
 - name: Configure primary postgresql.conf
-  template: src=postgresql.conf.j2 dest=/var/lib/pgsql/9.5/data/postgresql.conf
+  template:
+    src: postgresql.conf.j2
+    dest: /var/lib/pgsql/9.5/data/postgresql.conf
   notify: restart postgresql
 - name: Configure primary pg_hba.conf
-  template: src=pg_hba.conf.j2 dest=/var/lib/pgsql/9.5/data/pg_hba.conf
+  template:
+    src: pg_hba.conf.j2
+    dest: /var/lib/pgsql/9.5/data/pg_hba.conf
   notify: restart postgresql
 - name: start primary database
   service: name=postgresql-9.5 state=started enabled=yes

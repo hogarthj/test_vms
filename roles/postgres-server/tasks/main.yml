@@ -2,7 +2,7 @@
 - name: Install postgresql server
   package:
     name: postgresql-server
-    state: latest 
+    state: present
 - name: Initialize postgres database files
   command: /usr/bin/postgresql-setup initdb
   args:
@@ -10,6 +10,6 @@
 - name: Start and enable the postgres service
   service:
     name: postgresql
-    state: running
+    state: started
     enabled: yes
 ...

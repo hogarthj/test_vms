@@ -2,7 +2,7 @@
 - name: Install python postgres bindings
   package:
     name: python-psycopg2
-    state: latest
+    state: present
 - name: Create user to access database
   become: yes
   become_user: postgres
@@ -24,11 +24,11 @@
     privs: ALL
     role: "{{ oc_dbuser }}"
 - name: Allow password auth for owncloud user
-  lineinfile: 
+  lineinfile:
     dest: /var/lib/pgsql/data/pg_hba.conf
     state: present
     insertafter: '^#\s+TYPE\s+DATABASE\s+USER\s+ADDRESS\s+METHOD\s*$'
-    line: "{{ item }}" 
+    line: "{{ item }}"
   with_items:
     - "host {{ oc_dbname }} {{ oc_dbuser }} 127.0.0.1/32 password"
     - "host {{ oc_dbname }} {{ oc_dbuser }} ::1/128 password"

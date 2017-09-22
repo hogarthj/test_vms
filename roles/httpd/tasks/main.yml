@@ -2,11 +2,11 @@
 - name: Install httpd
   package:
     name: httpd
-    state: latest
+    state: present
   notify: Reload httpd
 - name: Start and enable httpd
   service:
     name: httpd
-    state: running
+    state: started
     enabled: true
 ...

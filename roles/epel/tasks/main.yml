@@ -2,5 +2,5 @@
 - name: Enable EPEL on EL7
   package:
     name: epel-release
-    state: latest
+    state: present
 ...

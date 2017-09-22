@@ -2,10 +2,10 @@
 - name: Install nginx
   package:
     name: nginx
-    state: latest
+    state: present
 - name: Start and enable nginx
   service:
     name: nginx
-    state: running
+    state: started
     enabled: yes
 ...

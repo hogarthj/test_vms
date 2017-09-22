@@ -2,10 +2,10 @@
 - name: Install mariadb server
   package:
     name: mariadb-server
-    state: latest
+    state: present
 - name: Start and enable mariadb service
   service:
     name: mariadb
-    state: running
+    state: started
     enabled: yes
 ...
