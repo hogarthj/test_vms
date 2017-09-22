@@ -54,7 +54,7 @@
 - name: Start php-fpm service for nginx usage
   service:
     name: php-fpm
-    state: running
+    state: started
     enabled: yes
   when: oc_web == "nginx"
 - name: Get nextcloud status
