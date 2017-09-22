@@ -16,10 +16,6 @@
   roles:
     - common
 
-- hosts: gitlab
-  roles:
-    - gitlab
-
 - hosts: ipa
   roles:
     - ipaserver
@@ -31,10 +27,6 @@
 - hosts: pgpool
   roles:
     - pgpool
-
-- hosts: jenkins
-  roles:
-    - jenkins
 
 - hosts: jenkins_slave
   roles:
