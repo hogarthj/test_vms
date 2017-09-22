@@ -1,0 +1,3 @@
+- hosts: ansitower
+  roles:
+    - ansible-tower

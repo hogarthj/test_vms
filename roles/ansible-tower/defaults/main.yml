@@ -1,0 +1,7 @@
+---
+# defaults file for ansible-tower
+#
+at_license: {}
+at_host: localhost
+at_admin_user: admin
+at_admin_pass: password

@@ -1,0 +1,60 @@
+---
+# tasks file for ansible-tower
+#
+
+- name: create tower setup dir
+  file:
+    state: directory
+    path: /root/ansible-tower-setup
+
+- name: obtain tower
+  unarchive:
+    remote_src: yes
+    src: "https://releases.ansible.com/ansible-tower/setup-bundle/ansible-tower-setup-bundle-latest.el{{ ansible_distribution_major_version }}.tar.gz"
+    dest: "/root/ansible-tower-setup/"
+    creates: "/root/ansible-tower-setup/setup.sh"
+    extra_opts:
+      - '--strip-components=1'
+
+- name: enable epel
+  include: enable_epel.yml
+
+- name: copy inventory file into place
+  copy:
+    src: tower-inv
+    dest: /root/ansible-tower-setup/inventory
+
+- name: run the tower installer
+  shell: ./setup.sh
+  args:
+    chdir: /root/ansible-tower-setup
+    creates: /var/lib/awx
+
+- name: wait for nginx to be ready
+  uri:
+    url: "https://{{ at_host }}/"
+    validate_certs: false
+  register: at_ui_status
+  until: at_ui_status.status == 200
+  delay: 1
+  retries: 30
+
+- name: retrieve the current config
+  uri:
+    url: "https://{{ at_host }}/api/v1/config/"
+    user: "{{ at_admin_user }}"
+    password: "{{ at_admin_pass }}"
+    validate_certs: false
+  register: at_api_config
+
+- name: apply the license
+  uri:
+    url: "http://{{ at_host }}/api/v1/config/"
+    user: "{{ at_admin_user }}"
+    password: "{{ at_admin_pass }}"
+    body: "{{ at_license | to_json }}"
+    method: POST
+    body_format: json
+  when: at_api_config.json.license_info == {}
+
+

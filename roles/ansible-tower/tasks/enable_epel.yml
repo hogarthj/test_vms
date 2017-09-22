@@ -1,0 +1,18 @@
+- name: get RH repos enabled
+  command: subscription-manager repos --list-enabled
+  register: repos_status
+  when: ansible_distribution == 'RedHat'
+  changed_when: false
+
+- name: enable required repos
+  command: "subscription-manager repos --enable {{ item }}"
+  when:
+    - ansible_distribution == 'RedHat'
+    - repos_status.stdout.find(item) == -1
+  with_items:
+    - "rhel-{{ ansible_distribution_major_version }}-server-optional-rpms"
+    - "rhel-{{ ansible_distribution_major_version }}-server-extras-rpms"
+
+- name: install epel release package
+  yum:
+    name: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
