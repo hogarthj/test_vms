@@ -4,7 +4,7 @@ if [[ "$1" != "" ]]
 then
     dist=$1
 else
-    dist="f25"
+    dist="f27"
 fi
 
 for web in httpd nginx
@@ -14,9 +14,9 @@ for web in httpd nginx
         vmclone ${dist}-oc-${web}-${db}
         if [[ ${dist} =~ f([[:digit:]]|raw) ]]
         then
-            vmrole ${dist}-nc-${web}-${db} fedora owncloud ${web} ${db}
+            vmrole ${dist}-oc-${web}-${db} fedora owncloud ${web} ${db}
         else
-            vmrole ${dist}-nc-${web}-${db} owncloud ${web} ${db}
+            vmrole ${dist}-oc-${web}-${db} owncloud ${web} ${db}
         fi
         virsh start ${dist}-oc-${web}-${db}
     done

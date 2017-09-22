@@ -4,7 +4,7 @@ if [[ "$1" != "" ]]
 then
     dist=$1
 else
-    dist="f25"
+    dist="f27"
 fi
 
 for web in httpd nginx
