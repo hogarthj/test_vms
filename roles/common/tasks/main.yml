@@ -16,7 +16,7 @@
 - name: Set selinux to enforcing
   selinux:
     policy: targeted
-    state: permissive
+    state: enforcing
 - name: Install python bindings for firewalld
   package:
     name: python2-firewall
