@@ -3,9 +3,19 @@
   package:
     name: nginx
     state: present
+# Work around bz#1563635
+- name: Set selinux to enforcing
+  selinux:
+    policy: targeted
+    state: permissive
 - name: Start and enable nginx
   service:
     name: nginx
     state: started
     enabled: yes
+- name: Set selinux to enforcing
+  selinux:
+    policy: targeted
+    state: enforcing
+
 ...

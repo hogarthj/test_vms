@@ -1,0 +1,8 @@
+ansible_python_interpreter: /usr/bin/python3
+common_selinux_bindings:
+  - python3-libselinux
+  - python3-libsemanage
+common_firewalld_binding: python3-firewall
+oc_mysql_binding: python3-mysql
+oc_postgres_binding: python3-psycopg2
+

@@ -1,13 +1,7 @@
 ---
-- name: Set package name for mysql python for Fedora
-  set_fact: python_mysql=python2-mysql
-  when: ansible_distribution == "Fedora"
-- name: Set package name for mysql python for CentOS
-  set_fact: python_mysql=MySQL-python
-  when: ansible_distribution == "CentOS"
 - name: Install the python mysql bindings
   package:
-    name: "{{ python_mysql }}"
+    name: "{{ oc_mysql_binding }}"
     state: present
 - name: Create mysql database
   mysql_db:

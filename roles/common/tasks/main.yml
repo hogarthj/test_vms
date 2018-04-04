@@ -10,16 +10,14 @@
   package:
     name: "{{ item }}"
     state: present
-  with_items:
-    - libselinux-python
-    - libsemanage-python
+  with_items: "{{ common_selinux_bindings }}"
 - name: Set selinux to enforcing
   selinux:
     policy: targeted
     state: enforcing
 - name: Install python bindings for firewalld
   package:
-    name: python2-firewall
+    name: "{{ common_firewalld_binding }}"
     state: present
   when: ansible_distribution != "CentOS"
 - name: Set hostname to vmname

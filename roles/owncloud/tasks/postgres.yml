@@ -1,7 +1,7 @@
 ---
 - name: Install python postgres bindings
   package:
-    name: python-psycopg2
+    name: "{{ oc_postgres_binding }}"
     state: present
 - name: Create user to access database
   become: yes

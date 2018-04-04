@@ -1,2 +1,7 @@
 ---
+common_selinux_bindings:
+  - libselinux-python
+  - libsemanage-python
+
+common_firewalld_binding: python2-firewall
 ...
